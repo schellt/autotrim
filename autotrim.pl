@@ -7,13 +7,13 @@ use IPC::Cmd qw[can_run run];
 
 sub print_help{
 	print STDOUT "\n";
-	print STDOUT "Autotrim v0.4\n";
+	print STDOUT "Autotrim v0.5\n";
 	print STDOUT "\n";
 	print STDOUT "Authors:\n";
-	print STDOUT "\tOppold AM, Schell T\n";
+	print STDOUT "\tWaldvogel AM, Schell T\n";
 	print STDOUT "\n";
 	print STDOUT "Citation:\n";
-	print STDOUT "\tIf you use this tool please cite:\n\tOppold AM, Wieser A, Schell T, Patel S, Schmidt H, Hankeln T, Feldmeyer B, Pfenninger M. (in preparation,\n\tstatus: 2017-03-06). The genomic footprint of climate adaptation in Chironomus riparius.\n";
+	print STDOUT "\tIf you use this tool please cite:\n\tWaldvogel AM, Wieser A, Schell T, Patel S, Schmidt H, Hankeln T, Feldmeyer B, Pfenninger M. (in press,\n\tstatus: 2017-02-15). The genomic footprint of climate adaptation in Chironomus riparius.\n";
 	print STDOUT "\n";
 	print STDOUT "Description:\n";
 	print STDOUT "\tTrimming (overrepresented k-mers from) multiple fastq files.\n";
@@ -27,26 +27,26 @@ sub print_help{
 	print STDOUT "\tINPUT\n";
 	print STDOUT "\tThere are two different ways to specify the input files:\n";
 	print STDOUT "\t\t1) Multiple folders containing one or two fastq files are in the same directory.\n";
-	print STDOUT "\t\t   The fastq files need to end with .fastq or .fq.\n";
-	print STDOUT "\t\t   For paired data the two fastq files have to end with \"_1.f(ast)q\" or \"_2.f(ast)q\".\n";
-	print STDOUT "\t\t   Folders containing more than two fastq files or paired data without ending in \"_1.f(ast)q\"\n\t\t   and \"_2.f(ast)q\" are skipped.\n";
+	print STDOUT "\t\t   The fastq files need to end with .fastq(.gz) or .fq(.gz).\n";
+	print STDOUT "\t\t   For paired data the two fastq files have to end with \"_1.f(ast)q(.gz)\" or \"_2.f(ast)q(.gz)\".\n";
+	print STDOUT "\t\t   Folders containing more than two fastq files or paired data without ending in \"_1.f(ast)q(.gz)\"\n\t\t   and \"_2.f(ast)q(.gz)\" are skipped.\n";
 	print STDOUT "\t\t2) File of file names containing a path to a single end fastq or two tab seperated paths for paired\n\t\t   end data per line.\n";
 	print STDOUT "\t\t   The files for paired end data don't have to be in the same folder nor any special file names.\n";
 	print STDOUT "\t=> While choosing a root direcory will skip the subdirectory when containg more than two fastq files\n\t   (e.g. output), the file of file names option will overwirte existing files without asking!\n";
 	print STDOUT "\n";
 	print STDOUT "\tOUTPUT\n";
 	print STDOUT "\tFastq output files are created in the same directory as the corrensponding input file.\n";
-	print STDOUT "\tThe f(ast)q file extension will be removed and \"_autotrim.fq\" for single end data and \"_autotrim.paired.fq\"\n\trespective \"_autotrim.unpaired.fq\" will be added to the end of the file name.\n";
+	print STDOUT "\tThe f(ast)q(.gz) file extension will be removed and \"_autotrim.fq\" for single end data and\n\t\"_autotrim.paired.fq\" respective \"_autotrim.unpaired.fq\" will be added to the end of the file name.\n";
 	print STDOUT "\tFastQC reports will be created for single end data and the paired output fastq files for paired end input\n\t(not for the unpaired output)\n";
 	print STDOUT "\tStandard out \"trimmomatic_log\" and standard error \"trimmomatic_err\" from each Trimmomatic run will be saved\n\tin the same folder as the input.\n";
 	print STDOUT "\n";
 	print STDOUT "Usage:\n";
-	print STDOUT "\tautotrim.pl [-d <root_dir> | -fofn <file_of_file_names> -kfa <file_to_save_overrepresented_kmers>]\n\t-to <trimmomatic_options> -trim <trimmomatic_trimmer>\n";
+	print STDOUT "\tautotrim_0.5.pl [-d <root_dir> | -fofn <file_of_file_names> -log <dir_to_place_the_log-file>\n\t-kfa <file_to_save_overrepresented_kmers>] -to <trimmomatic_options> -trim <trimmomatic_trimmer>\n";
 	print STDOUT "\n";
 	print STDOUT "Options: [default]\n";
 	print STDOUT "\t-d STR\t\tRoot directory for automatic input of multiple data sets. The file containing overrepre-\n\t\t\tsented k-mers (kmer.fa) and the autotrim log file (autotrim.log) will be saved in this\n\t\t\tdirectory.\n";
 	print STDOUT "\t-fofn STR\tFile of file names containing paths to one data set per line.\n";
-	print STDOUT "\t-log STR\tSpecify the path to save the file containing overrepresented k-mers (kmer.fa) and the log\n\t\t\tfile of tautotrim (autotrim.log) if using -fofn.\n";
+	print STDOUT "\t-log STR\tSpecify the path to save the file containing overrepresented k-mers (kmer.fa) and the log\n\t\t\tfile of autotrim (autotrim.log) if using -fofn.\n";
 	print STDOUT "\t-to STR\t\tA file containing Trimmomatic options that should be used. All options need to be in the\n\t\t\tfirst line of the file.\n";
 	print STDOUT "\t\t\tCreate a trimlog for every data set writing \"-trimlog\" without a path, it will be saved in\n\t\t\tthe same folder as the single or \"_1\" input file.\n";
 	print STDOUT "\t-tt INT\t\tTrimmomatic threads. Specify either with -to or with -tt. [1]\n";
@@ -58,6 +58,7 @@ sub print_help{
 	print STDOUT "\t-v\t\tVerbose. Print executed commands of Trimmomatic and FastQC to STDOUT and log file. [off]\n";
 	print STDOUT "\t-tp STR\t\tTrimmomatic path. The whole path to the Trimmomatic jar file. Specify if \"trimmomatic\" is\n\t\t\tnot in your \$PATH.\n";
 	print STDOUT "\t-fqcp STR\tFastQC path. The whole path to the FastQC executable. Specify if \"fastqc\" is not in your\n\t\t\t\$PATH.\n";
+	print STDOUT "\t-rn\t\tRename files according the folder they are placed in. [off]\n";
 	print STDOUT "\t-h or -help\tPrint this help and exit.\n";
 	exit;
 }
@@ -76,6 +77,7 @@ my $kfa = "";
 my $log = "";
 my $verbose = 0;
 my $nok = 0;
+my $rename_switch = 0;
 
 if(scalar(@ARGV) == 0){
 	print_help;
@@ -125,6 +127,9 @@ for (my $i = 0; $i < scalar(@ARGV);$i++){
 	}
 	if ($ARGV[$i] eq "-h" or $ARGV[$i] eq "-help"){
 		print_help;
+	}
+	if ($ARGV[$i] eq "-rn"){
+		$rename_switch = 1;
 	}
 }
 
@@ -197,6 +202,9 @@ if ($fastqc_path eq ""){
 
 open (LOG, '>', $log);
 
+print STDOUT "[autotrim] " . $0 . " " . join(" ",@ARGV) . "\n";
+print LOG "[autotrim] " . $0 . " " . join(" ",@ARGV) . "\n";
+
 my $trimmomatic_version = "";
 if (`$trimmomatic_path -version 2> /dev/null` eq ""){
 	$trimmomatic_version = "< 0.36";
@@ -240,7 +248,7 @@ if($root_dir ne ""){
 		my @files = ();
 		while (my $file = readdir(SUBDIR)) {				#reads the sub dir
 			next unless (-f "$fulldirlist[$i]/$file");		#returns only files from the sub dir
-			if ($file =~ m/\.f(ast)?q$/){				#ignores files that don't match the pattern (end with .fq)
+			if ($file =~ m/\.f(ast)?q(\.gz)?$/){				#ignores files that don't match the pattern (end with .fq)
 				push (@files, $fulldirlist[$i] . $file);
 			}
 		}
@@ -252,7 +260,7 @@ if($root_dir ne ""){
 			my $file_err = 0;
 			if(scalar(@files) == 2){
 				foreach(@files){
-					if ($_ !~ m/_[1-2]\.f(ast)?q$/){
+					if ($_ !~ m/_[1-2]\.f(ast)?q(\.gz)?$/){
 						print STDERR "[autotrim] WARNING Unexpected filename $_\n";
 						print LOG "[autotrim] WARNING Unexpected filename $_\n";
 						$file_err = 1;
@@ -260,6 +268,11 @@ if($root_dir ne ""){
 				}
 			}
 			if($file_err == 0){
+				if(scalar(@files) == 2 and $files[0] =~ m/_2\.f(ast)?q(\.gz)?$/){	#in rare cases the first file is not the _1 file - e.g. only the _1 is gzipped and _2 not
+					my $f1 = $files[1];
+					my $f2 = $files[0];
+					@files = ($f1,$f2);
+				}
 				$paths{$fulldirlist[$i]} = join(";",@files);
 			}
 			else{
@@ -310,7 +323,12 @@ for (my $i = 0; $i < scalar(@path_keys); $i++){
 	if(scalar(@in_files) == 1){
 		my $in = $in_files[0];
 		my $out = $in;
-		$out =~ s/\.f(ast)?q$//;
+		$out =~ s/\.f(ast)?q(\.gz)?$//;
+		if($rename_switch == 1){
+			my @rename = split(/\//,$out);
+			$rename[-1] = $rename[-2];
+			$out = join("/",@rename);
+		}
 		my @out = ($out . "_autotrim.fq");
 		if($global_trim_opts_file ne ""){
 			$global_trim_opts = `head -n 1 $global_trim_opts_file`;
@@ -320,18 +338,18 @@ for (my $i = 0; $i < scalar(@path_keys); $i++){
 			}
 			$global_trim_opts = $global_trim_opts . " ";
 		}
-		$global_trim_opts = insert_trimlog($global_trim_opts,$in);
+		$global_trim_opts = insert_trimlog($global_trim_opts,$in,$rename_switch);
 		if($verbose == 1){
 			print STDOUT "\e[K";
-			print STDOUT "$trimmomatic_path SE $global_trim_opts$in $out[0] $global_trimmer > $out.trimmomatic_log 2> $out.trimmomatic_err\n";	#start first trimmomatic run
+			print STDOUT "$trimmomatic_path SE $global_trim_opts$in $out[0] $global_trimmer > $out\_autotrim.trimmomatic_log 2> $out\_autotrim.trimmomatic_err\n";	#start first trimmomatic run
 			print STDOUT "[autotrim] " . $status . " / " . $scalar_path_keys . " [" . $frac . "%] jobs trimmed.\r";
-			print LOG "$trimmomatic_path SE $global_trim_opts$in $out[0] $global_trimmer > $out.trimmomatic_log 2> $out.trimmomatic_err\n";
+			print LOG "$trimmomatic_path SE $global_trim_opts$in $out[0] $global_trimmer > $out\_autotrim.trimmomatic_log 2> $out\_autotrim.trimmomatic_err\n";
 		}
-		system("$trimmomatic_path SE $global_trim_opts$in $out[0] $global_trimmer > $out.trimmomatic_log 2> $out.trimmomatic_err");
+		system("$trimmomatic_path SE $global_trim_opts$in $out[0] $global_trimmer > $out\_autotrim.trimmomatic_log 2> $out\_autotrim.trimmomatic_err");
 		my ($match1,$match2) = run_fastqc(\@out,\%kmers,$status,$scalar_path_keys,$frac,$nok);	#call fastqc subroutine
 		if($nok == 0){
 			while ($match1 == 1 or $match2 == 1){			#if overrepresented kmers are left after trimming the trimming has to be repeated
-				trimmomatic_loop($trimmomatic_path,\@in_files,$global_trim_opts,$global_trimmer,$verbose,$status,$scalar_path_keys,$frac);   #call trimmomatic subroutine
+				trimmomatic_loop($trimmomatic_path,\@in_files,$global_trim_opts,$global_trimmer,$verbose,$status,$scalar_path_keys,$frac,$rename_switch);   #call trimmomatic subroutine
 				($match1,$match2) = run_fastqc(\@out,\%kmers,$status,$scalar_path_keys,$frac,$nok);       #call fastqc subroutine
 			}
 		}
@@ -339,7 +357,7 @@ for (my $i = 0; $i < scalar(@path_keys); $i++){
 			print STDOUT "\e[K";
 			print STDOUT "[autotrim] " . ((split /\//,$in_files[0])[-2] . " trimmed successfully\n");
 			print LOG "[autotrim] " . ((split /\//,$in_files[0])[-2] . " trimmed successfully\n");
-			my $result = `tail -n 2 $out.trimmomatic_err | head -n 1`;
+			my $result = `tail -n 2 $out\_autotrim.trimmomatic_err | head -n 1`;
 			chomp $result;
 			print STDOUT "[autotrim] " . $result . "\n";
 			print LOG "[autotrim] " . $result . "\n";
@@ -349,13 +367,36 @@ for (my $i = 0; $i < scalar(@path_keys); $i++){
 		my $in1 = $in_files[0];
 		my $in2 = $in_files[1];
 		my $out1 = $in1;
-		$out1 =~ s/\.f(ast)?q$//;
-		my $out1p = $out1 . "_autotrim.paired.fq";
-		my $out1u = $out1 . "_autotrim.unpaired.fq";
+		$out1 =~ s/\.f(ast)?q(\.gz)?$//;
+		my $out1p;
+		my $out1u;
+		if($rename_switch == 1){
+			my @rename1 = split(/\//,$out1);
+			$rename1[-1] = $rename1[-2];
+			$out1 = join("/",@rename1);
+			$out1p = $out1 . "_1_autotrim.paired.fq";
+			$out1u = $out1 . "_1_autotrim.unpaired.fq";
+			$out1 = $out1 . "_1";
+		}
+		else{
+			$out1p = $out1 . "_autotrim.paired.fq";
+			$out1u = $out1 . "_autotrim.unpaired.fq";
+		}
 		my $out2 = $in2;
-		$out2 =~ s/\.f(ast)?q$//;
-		my $out2p = $out2 . "_autotrim.paired.fq";
-		my $out2u = $out2 . "_autotrim.unpaired.fq";
+		$out2 =~ s/\.f(ast)?q(\.gz)?$//;
+		my $out2p;
+		my $out2u;
+		if($rename_switch == 1){
+			my @rename2 = split(/\//,$out2);
+			$rename2[-1] = $rename2[-2];
+			$out2 = join("/",@rename2);
+			$out2p = $out2 . "_2_autotrim.paired.fq";
+			$out2u = $out2 . "_2_autotrim.unpaired.fq";
+		}
+		else{
+			$out2p = $out2 . "_autotrim.paired.fq";
+			$out2u = $out2 . "_autotrim.unpaired.fq";
+		}
 		my @out = ($out1p,$out2p);
 		if($global_trim_opts_file ne ""){
 			$global_trim_opts = `head -n 1 $global_trim_opts_file`;
@@ -365,18 +406,18 @@ for (my $i = 0; $i < scalar(@path_keys); $i++){
 			}
 			$global_trim_opts = $global_trim_opts . " ";
 		}
-		$global_trim_opts = insert_trimlog($global_trim_opts,$in1);
+		$global_trim_opts = insert_trimlog($global_trim_opts,$in1,$rename_switch);
 		if($verbose == 1){
 			print STDOUT "\e[K";
-			print STDOUT "$trimmomatic_path PE $global_trim_opts$in1 $in2 $out1p $out1u $out2p $out2u $global_trimmer > $out1.trimmomatic_log 2> $out1.trimmomatic_err\n";	#start first trimmomatic run
+			print STDOUT "$trimmomatic_path PE $global_trim_opts$in1 $in2 $out1p $out1u $out2p $out2u $global_trimmer > $out1\_autotrim.trimmomatic_log 2> $out1\_autotrim.trimmomatic_err\n";	#start first trimmomatic run
 			print STDOUT "[autotrim] " . $status . " / " . scalar(@path_keys) . " [" . $frac . "%] jobs trimmed.\r";
-			print LOG "$trimmomatic_path PE $global_trim_opts$in1 $in2 $out1p $out1u $out2p $out2u $global_trimmer > $out1.trimmomatic_log 2> $out1.trimmomatic_err\n";
+			print LOG "$trimmomatic_path PE $global_trim_opts$in1 $in2 $out1p $out1u $out2p $out2u $global_trimmer > $out1\_autotrim.trimmomatic_log 2> $out1\_autotrim.trimmomatic_err\n";
 		}
-		system("$trimmomatic_path PE $global_trim_opts$in1 $in2 $out1p $out1u $out2p $out2u $global_trimmer > $out1.trimmomatic_log 2> $out1.trimmomatic_err");
+		system("$trimmomatic_path PE $global_trim_opts$in1 $in2 $out1p $out1u $out2p $out2u $global_trimmer > $out1\_autotrim.trimmomatic_log 2> $out1\_autotrim.trimmomatic_err");
 		my ($match1,$match2) = run_fastqc(\@out,\%kmers,$status,$scalar_path_keys,$frac,$nok);
 		if($nok == 0){
 			while ($match1 == 1 or $match2 == 1){
-				trimmomatic_loop($trimmomatic_path,\@in_files,$global_trim_opts,$global_trimmer,$verbose,$status,$scalar_path_keys,$frac);   #call trimmomatic subroutine
+				trimmomatic_loop($trimmomatic_path,\@in_files,$global_trim_opts,$global_trimmer,$verbose,$status,$scalar_path_keys,$frac,$rename_switch);   #call trimmomatic subroutine
 				($match1,$match2) = run_fastqc(\@out,\%kmers,$status,$scalar_path_keys,$frac,$nok);       #call fastqc subroutine
 			}
 		}
@@ -384,7 +425,7 @@ for (my $i = 0; $i < scalar(@path_keys); $i++){
 			print STDOUT "\e[K";
 			print STDOUT "[autotrim] " . ((split /\//,$in_files[0])[-2] . " trimmed successfully\n");
 			print LOG "[autotrim] " . ((split /\//,$in_files[0])[-2] . " trimmed successfully\n");
-			my $result = `tail -n 2 $out1.trimmomatic_err | head -n 1`;
+			my $result = `tail -n 2 $out1\_autotrim.trimmomatic_err | head -n 1`;
 			chomp $result;
 			print STDOUT "[autotrim] " . $result . "\n";
 			print LOG "[autotrim] " . $result . "\n";
@@ -401,19 +442,25 @@ if($nok == 0){
 close LOG;
 
 sub insert_trimlog{
-	my ($global_trim_opts,$in) = @_;
-	$in =~ s/\.f(ast)?q$//;
+	my ($global_trim_opts,$in,$rename_switch) = @_;
+	my $out = $in;
+	$out =~ s/\.f(ast)?q(\.gz)?$//;
+	if($rename_switch == 1){
+		my @rename = split(/\//,$out);
+		$rename[-1] = $rename[-2];
+		$out = join("/",@rename);
+	}
 	if($global_trim_opts =~ m/^-trimlog$/){
-		$global_trim_opts =~ s/^-trimlog$/-trimlog $in.trimlog/;
+		$global_trim_opts =~ s/^-trimlog$/-trimlog $out\_autotrim.trimlog/;
 	}
 	if($global_trim_opts =~ m/^-trimlog /){
-		$global_trim_opts =~ s/^-trimlog /-trimlog $in.trimlog /;
+		$global_trim_opts =~ s/^-trimlog /-trimlog $out\_autotrim.trimlog /;
 	}
 	if($global_trim_opts =~ m/ -trimlog$/){
-		$global_trim_opts =~ s/ -trimlog$/ -trimlog $in.trimlog/;
+		$global_trim_opts =~ s/ -trimlog$/ -trimlog $out\_autotrim.trimlog/;
 	}
 	if($global_trim_opts =~ m/ -trimlog /){
-		$global_trim_opts =~ s/ -trimlog / -trimlog $in.trimlog /;
+		$global_trim_opts =~ s/ -trimlog / -trimlog $out\_autotrim.trimlog /;
 	}
 	return $global_trim_opts;
 }
@@ -496,7 +543,7 @@ sub run_fastqc{								#fastqc subroutine
 			print STDOUT "\e[K";
 			print STDOUT "[autotrim] " . ((split /\//,$in_files[0])[-2] . " trimmed successfully\n");
 			print LOG "[autotrim] " . ((split /\//,$in_files[0])[-2] . " trimmed successfully\n");
-			my $result = `tail -n 2 $out1.trimmomatic_err | head -n 1`;
+			my $result = `tail -n 2 $out1\_autotrim.trimmomatic_err | head -n 1`;
 			chomp $result;
 			print STDOUT "[autotrim] " . $result . "\n";
 			print LOG "[autotrim] " . $result . "\n";
@@ -516,7 +563,7 @@ sub run_fastqc{								#fastqc subroutine
 }
 
 sub trimmomatic_loop{										#trimmomatic run2+ subroutine
-	my ($trimmomatic_path,$in_files_ref,$global_trim_opts,$global_trimmer,$verbose,$status,$scalar_path_keys,$frac) = @_;
+	my ($trimmomatic_path,$in_files_ref,$global_trim_opts,$global_trimmer,$verbose,$status,$scalar_path_keys,$frac,$rename_switch) = @_;
 	my @ktrimmer = split(/ /,$global_trimmer);
 	for (my $i = scalar(@ktrimmer)-1; $i > -1; $i--){
 		if($ktrimmer[$i] =~ m/^ILLUMINACLIP:/){
@@ -533,34 +580,62 @@ sub trimmomatic_loop{										#trimmomatic run2+ subroutine
 	if(scalar(@in_files) == 1){
 		my $in = $in_files[0];
 		my $out = $in;
-		$out =~ s/\.f(ast)?q$//;
+		$out =~ s/\.f(ast)?q(\.gz)?$//;
+		if($rename_switch == 1){
+			my @rename = split(/\//,$out);
+			$rename[-1] = $rename[-2];
+			$out = join("/",@rename);
+                }
 		my $outfq = $out . "_autotrim.fq";
 		if($verbose == 1){
 			print STDOUT "\e[K";
-			print STDOUT "$trimmomatic_path SE $global_trim_opts$in $outfq $k_trimmer > $out.trimmomatic_log 2> $out.trimmomatic_err\n";
-			print LOG "$trimmomatic_path SE $global_trim_opts$in $outfq $k_trimmer > $out.trimmomatic_log 2> $out.trimmomatic_err\n";
+			print STDOUT "$trimmomatic_path SE $global_trim_opts$in $outfq $k_trimmer > $out\_autotrim.trimmomatic_log 2> $out\_autotrim.trimmomatic_err\n";
+			print LOG "$trimmomatic_path SE $global_trim_opts$in $outfq $k_trimmer > $out\_autotrim.trimmomatic_log 2> $out\_autotrim.trimmomatic_err\n";
 			print STDOUT "[autotrim] " . $status . " / " . $scalar_path_keys . " [" . $frac . "%] jobs trimmed.\r";
 		}
-		system("$trimmomatic_path SE $global_trim_opts$in $outfq $k_trimmer > $out.trimmomatic_log 2> $out.trimmomatic_err");
+		system("$trimmomatic_path SE $global_trim_opts$in $outfq $k_trimmer > $out\_autotrim.trimmomatic_log 2> $out\_autotrim.trimmomatic_err");
 	}
 	else{
 		my $in1 = $in_files[0];
 		my $in2 = $in_files[1];
 		my $out1 = $in1;
-		$out1 =~ s/\.f(ast)?q$//;
-		my $out1p = $out1 . "_autotrim.paired.fq";
-		my $out1u = $out1 . "_autotrim.unpaired.fq";
+		$out1 =~ s/\.f(ast)?q(\.gz)?$//;
+		my $out1p;
+		my $out1u;
+		if($rename_switch == 1){
+			my @rename1 = split(/\//,$out1);
+			$rename1[-1] = $rename1[-2];
+			$out1 = join("/",@rename1);
+			$out1p = $out1 . "_1_autotrim.paired.fq";
+			$out1u = $out1 . "_1_autotrim.unpaired.fq";
+			$out1 = $out1 . "_1";
+                }
+		else{
+			$out1p = $out1 . "_autotrim.paired.fq";
+			$out1u = $out1 . "_autotrim.unpaired.fq";
+		}
 		my $out2 = $in2;
-		$out2 =~ s/\.f(ast)?q$//;
-		my $out2p = $out2 . "_autotrim.paired.fq";
-		my $out2u = $out2 . "_autotrim.unpaired.fq";
+		$out2 =~ s/\.f(ast)?q(\.gz)?$//;
+		my $out2p;
+		my $out2u;
+		if($rename_switch == 1){
+			my @rename2 = split(/\//,$out2);
+			$rename2[-1] = $rename2[-2];
+			$out2 = join("/",@rename2);
+			$out2p = $out2 . "_2_autotrim.paired.fq";
+			$out2u = $out2 . "_2_autotrim.unpaired.fq";
+                }
+		else{
+			$out2p = $out2 . "_autotrim.paired.fq";
+			$out2u = $out2 . "_autotrim.unpaired.fq";
+		}
 		if($verbose == 1){
 			print STDOUT "\e[K";
-			print STDOUT "$trimmomatic_path PE $global_trim_opts$in1 $in2 $out1p $out1u $out2p $out2u $k_trimmer > $out1.trimmomatic_log 2> $out1.trimmomatic_err\n";
-			print LOG "$trimmomatic_path PE $global_trim_opts$in1 $in2 $out1p $out1u $out2p $out2u $k_trimmer > $out1.trimmomatic_log 2> $out1.trimmomatic_err\n";
+			print STDOUT "$trimmomatic_path PE $global_trim_opts$in1 $in2 $out1p $out1u $out2p $out2u $k_trimmer > $out1\_autotrim.trimmomatic_log 2> $out1\_autotrim.trimmomatic_err\n";
+			print LOG "$trimmomatic_path PE $global_trim_opts$in1 $in2 $out1p $out1u $out2p $out2u $k_trimmer > $out1\_autotrim.trimmomatic_log 2> $out1\_autotrim.trimmomatic_err\n";
 			print STDOUT "[autotrim] " . $status . " / " . $scalar_path_keys . " [" . $frac . "%] jobs trimmed.\r";
 		}
-		system("$trimmomatic_path PE $global_trim_opts$in1 $in2 $out1p $out1u $out2p $out2u $k_trimmer > $out1.trimmomatic_log 2> $out1.trimmomatic_err");
+		system("$trimmomatic_path PE $global_trim_opts$in1 $in2 $out1p $out1u $out2p $out2u $k_trimmer > $out1\_autotrim.trimmomatic_log 2> $out1\_autotrim.trimmomatic_err");
 	}
 }
 
