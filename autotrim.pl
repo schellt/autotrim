@@ -5,9 +5,11 @@ use warnings;
 use Cwd 'abs_path';
 use IPC::Cmd qw[can_run run];
 
+my $version = "0.6.1";
+
 sub print_help{
 	print STDOUT "\n";
-	print STDOUT "Autotrim v0.6\n";
+	print STDOUT "Autotrim v$version\n";
 	print STDOUT "\n";
 	print STDOUT "Authors:\n";
 	print STDOUT "\tWaldvogel A-M, Schell T\n";
@@ -42,7 +44,7 @@ sub print_help{
 	print STDOUT "\tThe MultiQC report will be placed either in the root directory if -d used or in the directory of\n\tthe log and overrepresented k-mers files if -fofn is used\n";
 	print STDOUT "\n";
 	print STDOUT "Usage:\n";
-	print STDOUT "\tautotrim_0.6.pl [-d <root_dir> | -fofn <file_of_file_names> -log <dir_to_place_the_log-file>]\n\t-to <trimmomatic_options> -trim <trimmomatic_trimmer>\n";
+	print STDOUT "\tautotrim.pl [-d <root_dir> | -fofn <file_of_file_names> -log <dir_to_place_the_log-file>]\n\t-to <trimmomatic_options> -trim <trimmomatic_trimmer>\n";
 	print STDOUT "\n";
 	print STDOUT "Options: [default]\n";
 	print STDOUT "\t-d STR\t\tRoot directory for automatic input of multiple data sets. The file containing\n\t\t\toverrepresented k-mers (kmer.fa) and the autotrim log file (autotrim.log) will be\n\t\t\tsaved in this directory.\n";
@@ -54,13 +56,14 @@ sub print_help{
 	print STDOUT "\t-trim STR\tA file containing Trimmomatic trimmer in the first line in the particular order\n\t\t\tthey should be executed.\n";
 	print STDOUT "\t\t\tIf trimming overrepresented k-mers, the \"ILLUMINACLIP\" will be inserted after the\n\t\t\tlast specified \"ILLUMINACLIP\".\n";
 	print STDOUT "\t-k INT\t\tK-mer length to screen for overrepresentaion with FastQC between 2 and 10. [7].\n";
-	print STDOUT "\t-nok\t\tNo overrepresentation screening of kmers. Trim each set once and create a FastQC\n\t\t\treport.\n";
+	print STDOUT "\t-nok\t\tNo overrepresentation screening of k-mers. Trim each set once and create a FastQC\n\t\t\treport.\n";
 	print STDOUT "\t\t\tRecommended for RNA-seq. [off]\n";
 	print STDOUT "\t-v\t\tVerbose. Print executed commands of Trimmomatic, FastQC and MultiQC to STDOUT and\n\t\t\tlog file. [off]\n";
 	print STDOUT "\t-tp STR\t\tTrimmomatic path. The whole path to the Trimmomatic jar file. Specify if\n\t\t\t\"trimmomatic\" is not in your \$PATH.\n";
 	print STDOUT "\t-fqcp STR\tFastQC path. The whole path to the FastQC executable. Specify if \"fastqc\" is not\n\t\t\tin your \$PATH.\n";
 	print STDOUT "\t-mqcp STR\tMultiQC path. The whole path to the MultiQC executable. Specify if \"multiqc\" is\n\t\t\tnot in your \$PATH and you want MultiQC automatically executed.\n";
 	print STDOUT "\t-rn\t\tRename files according the folder they are placed in. [off]\n";
+	print STDOUT "\t-version\tPrint version number and exit.\n";
 	print STDOUT "\t-h or -help\tPrint this help and exit.\n";
 	exit;
 }
@@ -139,6 +142,10 @@ for (my $i = 0; $i < scalar(@ARGV);$i++){
 	if ($ARGV[$i] eq "-rn"){
 		$rename_switch = 1;
 	}
+	if ($ARGV[$i] eq "-version"){
+		print STDOUT "Autotrim v$version\n";
+		exit;
+	}
 }
 
 
@@ -212,6 +219,8 @@ if ($fastqc_path eq ""){
 
 open (LOG, '>', $log);
 
+print STDOUT "[autotrim] Autotrim v$version\n";
+print LOG "[autotrim] Autotrim v$version\n";
 print STDOUT "[autotrim] " . $0 . " " . join(" ",@ARGV) . "\n";
 print LOG "[autotrim] " . $0 . " " . join(" ",@ARGV) . "\n";
 
@@ -333,12 +342,15 @@ if($fofn ne ""){
 				}
 			}
 			if($file_err == 0){
+				foreach(@files){
+					$_ = abs_path($_);
+				}
 				$paths{"fofn" . $fofn_index} = join(";",@files);
 			}
 		}
 	}
 }
-	
+
 my @path_keys = keys(%paths);
 
 if(scalar(@path_keys) == 0){
