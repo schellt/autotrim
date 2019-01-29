@@ -4,7 +4,7 @@
 Waldvogel A-M, Schell T
 
 ## Description
-#### Trimming (overrepresented *k*-mers from) multiple fastq files.
+__Trimming (overrepresented *k*-mers from) multiple fastq files.__
 
 After each trimming a test for overrepresented *k*-mers will be executed, if not switched off. Any overrepresented *k*-mers found will be added to a global list and the trimming will be repeated on the original input files together with the overrepesented *k*-mers until no overrepresentation is detected.
 
