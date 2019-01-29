@@ -28,7 +28,7 @@ There are two different ways to specify the input files:
 1. Multiple folders containing one or two fastq files are in the same directory. The fastq file(s) need to end with `.f(ast)q(.gz)`. For paired data the two fastq files have to end with `_1.f(ast)q(.gz)` and `_2.f(ast)q(.gz)`. Folders containing more than two fastq files or paired data without matching the criteria are skipped.
 2. File of file names containing a path to a single end fastq or two tab seperated paths for paired end data per line. The files for paired end data don't have to be in the same folder nor any special file names.
 
-#### While choosing a root direcory will skip the subdirectory when it contains more than two fastq files (e.g. output), the file of file names option will overwirte existing files without asking!
+__While choosing a root direcory will skip the subdirectory when it contains more than two fastq files (e.g. output), the file of file names option will overwirte existing files without asking!__
 
 ### Output
 Fastq output files are created in the same directory as the corrensponding input file.
