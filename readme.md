@@ -48,21 +48,31 @@ autotrim.pl [-d <root_dir> | -fofn <file_of_file_names> -log <dir_to_place_the_l
 #### Options: [default]
 
 ```
--d STR          Root directory for automatic input of multiple data sets. The file containing overrepresented k-mers (kmer.fa) and the autotrim log file (autotrim.log) will be saved in this directory.
+-d STR          Root directory for automatic input of multiple data sets. The file containing overrepresented
+                k-mers (kmer.fa) and the autotrim log file (autotrim.log) will be saved in this directory.
 -fofn STR       File of file names containing tab-seperated paths to one data set per line.
--log STR        Specify the path to save the file containing overrepresented k-mers (kmer.fa) and the log file of autotrim (autotrim.log) if using -fofn.
--to STR         A file containing Trimmomatic options that should be used. All options need to be in the first line of the file.
-                Create a trimlog for every data set writing "-trimlog" without a path, it will be saved in the same folder as the single or "_1" input file.
+-log STR        Specify the path to save the file containing overrepresented k-mers (kmer.fa) and the log
+                file of autotrim (autotrim.log) if using -fofn.
+-to STR         A file containing Trimmomatic options that should be used. All options need to be in the
+                first line of the file.
+                Create a trimlog for every data set writing "-trimlog" without a path, it will be saved in
+                the same folder as the single or "_1" input file.
 -tt INT         Trimmomatic threads. Specify either within -to or with -tt. [1]
--trim STR       A file containing Trimmomatic trimmer in the first line in the particular order they should be executed.
-                If trimming overrepresented k-mers, the "ILLUMINACLIP" will be inserted after the last specified "ILLUMINACLIP".
+-trim STR       A file containing Trimmomatic trimmer in the first line in the particular order they should be
+                executed.
+                If trimming overrepresented k-mers, the "ILLUMINACLIP" will be inserted after the last
+                specified "ILLUMINACLIP".
 -k INT          K-mer length to screen for overrepresentaion with FastQC between 2 and 10. [7].
 -nok            No overrepresentation screening of k-mers. Trim each set once and create a FastQC report.
                 Recommended for RNA-seq. [off]
--v              Verbose. Print executed commands of Trimmomatic, FastQC and MultiQC to STDOUT and log file. [off]
--tp STR         Trimmomatic path. The whole path to the Trimmomatic jar file. Specify if "trimmomatic" is not in your $PATH.
--fqcp STR       FastQC path. The whole path to the FastQC executable. Specify if "fastqc" is not in your $PATH.
--mqcp STR       MultiQC path. The whole path to the MultiQC executable. Specify if "multiqc" is not in your $PATH and you want to automatically execute MultiQC.
+-v              Verbose. Print executed commands of Trimmomatic, FastQC and MultiQC to STDOUT and log file.
+                [off]
+-tp STR         Trimmomatic path. The whole path to the Trimmomatic jar file. Specify if "trimmomatic" is not
+                in your $PATH.
+-fqcp STR       FastQC path. The whole path to the FastQC executable. Specify if "fastqc" is not in your
+                $PATH.
+-mqcp STR       MultiQC path. The whole path to the MultiQC executable. Specify if "multiqc" is not in your
+                $PATH and you want to automatically execute MultiQC.
 -rn             Rename files according the folder they are placed in. [off]
 -version        Print version number and exit.
 -h or -help     Print this help and exit.
