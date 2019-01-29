@@ -45,7 +45,7 @@ autotrim.pl [-d <root_dir> | -fofn <file_of_file_names> -log <dir_to_place_the_l
             -to <trimmomatic_options> -trim <trimmomatic_trimmer>
 ```
 
-#### Options: [default]
+__Options: [default]__
 
 ```
 -d STR          Root directory for automatic input of multiple data sets. The file containing overrepresented
