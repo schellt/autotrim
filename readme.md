@@ -18,7 +18,7 @@ Autotrim distinguishes automatically between paired and single end data.
 - Trimmomatic: [http://www.usadellab.org/cms/?page=trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
 - FastQC: [https://www.bioinformatics.babraham.ac.uk/projects/fastqc/](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
-#### Optional
+__Optional__
 - MultiQC: [http://multiqc.info/](http://multiqc.info/)
 
 ## Usage
