@@ -22,6 +22,11 @@ __Optional__
 - MultiQC: [http://multiqc.info/](http://multiqc.info/)
 
 ## Usage
+### Prerequisites
+- From FastQC version 0.11.6 the *k*-mer plot is disabled by default but is needed in Autotrim. To enable it, edit `FastQC/Configuration/limits.txt` by changing the `1` in the end of the line starting with `kmer` to `0`.
+
+__Optional__
+- If you don't want to specify `-tp`, `trimmomatic` should be in your `$PATH`. To do so, create an executable file named `trimmomatic` with the content `java -jar /path/to/trimmomatic.jar $*` in a directory that is your `$PATH`. Be sure to write the actual path to the `jar` file.
 ### Input
 There are two different ways to specify the input files:
 
