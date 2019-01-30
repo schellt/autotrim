@@ -39,7 +39,6 @@ FastQC reports will be created for single end input data and the paired output f
 Standard out `*.trimmomatic_log` and standard error `*.trimmomatic_err` from each Trimmomatic run will be saved in the same folder as the input.
 
 The MultiQC report will be placed either in the root directory if `-d` is used or in the directory of the log and overrepresented *k*-mers files if `-fofn` is used.
-
 ```
 autotrim.pl [-d <root_dir> | -fofn <file_of_file_names> -log <dir_to_place_the_log-file>]
             -to <trimmomatic_options> -trim <trimmomatic_trimmer>
@@ -81,4 +80,10 @@ __Options: [default]__
 ## Citation
 If you use this tool please cite:
 
-Waldvogel A‐M, Wieser A, Schell T, et al. The genomic footprint of climate adaptation in *Chironomus riparius*. *Mol Ecol.* 2018;27:1439–1456. [https://doi.org/10.1111/mec.14543](https://doi.org/10.1111/mec.14543)
+- Waldvogel A-M, Wieser A, Schell T, Patel S, Schmidt H et al. (2018). The genomic footprint of climate adaptation in *Chironomus riparius*. *Molecular Ecology*, 27(6):1439–1456. [https://doi.org/10.1111/mec.14543](https://doi.org/10.1111/mec.14543)
+
+Additional to the dependencies:
+
+- Bolger AM, Lohse M, Usadel B (2014). Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15):2114–2120. [https://doi.org/10.1093/bioinformatics/btu170](https://doi.org/10.1093/bioinformatics/btu170)
+- Andrews S (2010). FastQC: a quality control tool for high throughput sequence data. [http://www.bioinformatics.babraham.ac.uk/projects/fastqc](http://www.bioinformatics.babraham.ac.uk/projects/fastqc).
+- Ewels P, Magnusson M, Lundin S, Käller M (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. *Bioinformatics*, 32(19):3047–3048. [https://doi.org/10.1093/bioinformatics/btw354](https://doi.org/10.1093/bioinformatics/btw354)
